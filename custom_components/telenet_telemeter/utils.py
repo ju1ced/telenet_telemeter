@@ -1,20 +1,14 @@
 import json
 import logging
-import pprint
-from collections import defaultdict
 from datetime import date, datetime, timedelta
-from typing import List
 import requests
-from pydantic import BaseModel
 from enum import Enum
 import re
-import urllib.parse
 from ratelimit import limits, sleep_and_retry
 
 import voluptuous as vol
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import PROVIDER_TELENET, PROVIDER_BASE, PROVIDER_CONFIG
+from .const import PROVIDER_TELENET, PROVIDER_CONFIG
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -70,29 +64,35 @@ class TelenetSession(object):
         self.s.headers["Referrer"] = self.cfg["referrer"]
 
     def callTelenet(self, url, caller = "Not set", expectedStatusCode = 200, data = None, printResponse = False, method : HttpMethod  = HttpMethod.GET, allowRedirects = True):
+        if method not in (HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.OPTIONS):
+            raise ValueError(f"Unsupported HTTP method: {method!r}")
         try:
             if method == HttpMethod.GET:
                 _LOGGER.debug(f"[{caller}] Calling GET {url}")
                 response = self.s.get(url,timeout=30, allow_redirects=allowRedirects)
             elif method == HttpMethod.POST:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling POST {url} with data {data}")
-                response = self.s.post(url,data,timeout=30)
+                _LOGGER.debug(f"[{caller}] Calling POST {url}")
+                response = self.s.post(url,data,timeout=30, allow_redirects=allowRedirects)
             elif method == HttpMethod.PATCH:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling PATCH {url} with data: {data}")
-                response = self.s.patch(url,json=data,timeout=60)
+                _LOGGER.debug(f"[{caller}] Calling PATCH {url}")
+                response = self.s.patch(url,json=data,timeout=60, allow_redirects=allowRedirects)
             elif method == HttpMethod.OPTIONS:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling OPTIONS {url} with data: {data}")
-                response = self.s.options(url,timeout=60)
+                _LOGGER.debug(f"[{caller}] Calling OPTIONS {url}")
+                response = self.s.options(url,timeout=60, allow_redirects=allowRedirects)
             _LOGGER.debug(f"[{caller}] http status code = {response.status_code} (expecting {expectedStatusCode})")
             if printResponse:
                 _LOGGER.debug(f"[{caller}] Response: {response.text}")
-            if expectedStatusCode != None:
-                assert response.status_code == expectedStatusCode
-        except Exception as e:
-            _LOGGER.error(f"[{caller}]: Failed to call [{method}]({url}). Statuscode was {response.status_code}. Exception was {getattr(e, 'message', repr(e))}")
+            if expectedStatusCode is not None and response.status_code != expectedStatusCode:
+                raise requests.HTTPError(
+                    f"Unexpected HTTP status {response.status_code}; expected {expectedStatusCode}",
+                    response=response,
+                )
+        except requests.RequestException as err:
+            _LOGGER.error("[%s] HTTP %s request failed (%s)", caller, method.value, type(err).__name__)
+            raise
         return response
 
     
