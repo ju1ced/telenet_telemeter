@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 import requests
 from enum import Enum
 import re
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from ratelimit import limits, sleep_and_retry
 
 import voluptuous as vol
@@ -13,6 +14,28 @@ from .const import PROVIDER_TELENET, PROVIDER_CONFIG
 _LOGGER = logging.getLogger(__name__)
 
 TELENET_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.0%z"
+
+# Query parameters that can carry login secrets (e.g. the Okta success redirect).
+_SENSITIVE_QUERY_PARAMS = {
+    "access_token", "code", "id_token", "nonce", "password", "passcode",
+    "refresh_token", "sessiontoken", "state", "statehandle", "statetoken", "token",
+}
+
+
+def redact_url(url):
+    """Return url with the values of sensitive query parameters masked, for logging."""
+    try:
+        parts = urlsplit(str(url))
+    except ValueError:
+        return "<unparsable url>"
+    if not parts.query:
+        return str(url)
+    query = urlencode(
+        [(key, "***" if key.lower() in _SENSITIVE_QUERY_PARAMS else value)
+         for key, value in parse_qsl(parts.query, keep_blank_values=True)],
+        safe="*",
+    )
+    return urlunsplit(parts._replace(query=query))
 
 def check_settings(config, hass):
     if not any(config.get(i) for i in ["username"]):
@@ -68,19 +91,19 @@ class TelenetSession(object):
             raise ValueError(f"Unsupported HTTP method: {method!r}")
         try:
             if method == HttpMethod.GET:
-                _LOGGER.debug(f"[{caller}] Calling GET {url}")
+                _LOGGER.debug(f"[{caller}] Calling GET {redact_url(url)}")
                 response = self.s.get(url,timeout=30, allow_redirects=allowRedirects)
             elif method == HttpMethod.POST:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling POST {url}")
+                _LOGGER.debug(f"[{caller}] Calling POST {redact_url(url)}")
                 response = self.s.post(url,data,timeout=30, allow_redirects=allowRedirects)
             elif method == HttpMethod.PATCH:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling PATCH {url}")
+                _LOGGER.debug(f"[{caller}] Calling PATCH {redact_url(url)}")
                 response = self.s.patch(url,json=data,timeout=60, allow_redirects=allowRedirects)
             elif method == HttpMethod.OPTIONS:
                 self.s.headers["Content-Type"] = "application/json;charset=UTF-8"
-                _LOGGER.debug(f"[{caller}] Calling OPTIONS {url}")
+                _LOGGER.debug(f"[{caller}] Calling OPTIONS {redact_url(url)}")
                 response = self.s.options(url,timeout=60, allow_redirects=allowRedirects)
             _LOGGER.debug(f"[{caller}] http status code = {response.status_code} (expecting {expectedStatusCode})")
             if printResponse:
@@ -115,7 +138,7 @@ class TelenetSession(object):
             # Return if already authenticated
             return
         assert response.status_code == 401
-        _LOGGER.debug(f"Login response to split state, nonce: {response.text} - ({response.status_code}) - {response.headers}")
+        _LOGGER.debug(f"[login] Not authenticated yet ({response.status_code}), starting login flow")
         _state, _nonce = response.text.split(",", maxsplit=2)
 
         # Fetch the initial state token
@@ -128,12 +151,11 @@ class TelenetSession(object):
         )
         _LOGGER.debug(f"Authorization URL status: {state_token_response.status_code}")
         assert state_token_response.status_code in [200, 302], f"Unexpected status {state_token_response.status_code}"
-        _LOGGER.debug(f"State token response: ({state_token_response.status_code}) - {state_token_response.headers}")
 
         state_token_matcher = re.search('"stateToken":"(.*)","helpLinks"', state_token_response.text) 
         state_token_encoded = state_token_matcher.group(1)
         state_token_decoded = state_token_encoded.encode('latin1').decode('unicode_escape')
-        _LOGGER.debug(f"Initial state token {state_token_decoded}")
+        _LOGGER.debug("[login] Initial state token obtained")
         
         introspection_response = self.callTelenet(
             url=f"{self.secure_url}/idp/idx/introspect",
@@ -179,7 +201,7 @@ class TelenetSession(object):
             method=HttpMethod.POST,
             caller="login"
         )
-        _LOGGER.debug(f"Answer response: {answer_response.text}")
+        _LOGGER.debug(f"[login] Challenge answer accepted ({answer_response.status_code})")
 
         self.callTelenet(url=answer_response.json()["success"]["href"], caller="login")
 
