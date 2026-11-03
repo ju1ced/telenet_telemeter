@@ -104,6 +104,28 @@ class TestLogRedaction(unittest.TestCase):
         self.assertIn("stateToken=***", output)
         self.assertIn("lang=nl", output)
 
+    def test_print_response_does_not_log_body(self):
+        client = utils.TelenetSession()
+        client.s.close()
+        client.s = Mock(spec=requests.Session)
+        client.s.headers = {}
+        body = json.dumps({"password": PASSWORD, "passcode": "PASSCODE-SECRET",
+                           "stateToken": SECRETS["stateToken"],
+                           "stateHandle": SECRETS["stateHandle 1"]})
+        markers = [PASSWORD, "PASSCODE-SECRET", SECRETS["stateToken"], SECRETS["stateHandle 1"]]
+        for method in (utils.HttpMethod.GET, utils.HttpMethod.POST,
+                       utils.HttpMethod.PATCH, utils.HttpMethod.OPTIONS):
+            with self.subTest(method=method):
+                getattr(client.s, method.value.lower()).return_value = _response(200, body)
+                with self.assertLogs(utils._LOGGER, level="DEBUG") as logs:
+                    client.callTelenet("https://x.invalid/api", caller="t",
+                                       printResponse=True, method=method)
+                output = "\n".join(logs.output)
+                self.assertIn("http status code = 200", output)
+                self.assertIn("not logged", output)
+                for marker in markers:
+                    self.assertNotIn(marker, output)
+
     def test_redact_url(self):
         cases = {
             "https://x.invalid/a?stateToken=abc&lang=nl": "https://x.invalid/a?stateToken=***&lang=nl",

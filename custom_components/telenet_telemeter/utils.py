@@ -107,7 +107,8 @@ class TelenetSession(object):
                 response = self.s.options(url,timeout=60, allow_redirects=allowRedirects)
             _LOGGER.debug(f"[{caller}] http status code = {response.status_code} (expecting {expectedStatusCode})")
             if printResponse:
-                _LOGGER.debug(f"[{caller}] Response: {response.text}")
+                # Never log the body itself: it can contain tokens or credentials.
+                _LOGGER.debug(f"[{caller}] Response body received ({len(response.content or b'')} bytes, not logged)")
             if expectedStatusCode is not None and response.status_code != expectedStatusCode:
                 raise requests.HTTPError(
                     f"Unexpected HTTP status {response.status_code}; expected {expectedStatusCode}",
