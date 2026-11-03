@@ -4,7 +4,11 @@ GitHub is de bron voor ticketinhoud en planning. `tickets.md` en `kanban.md` zij
 gegenereerde weergaven: wijzig ze niet rechtstreeks. Maak of bewerk een GitHub
 issue met een titel als `TM-17: Onderwerp`. Scope, afhankelijkheden en
 acceptatiecriteria staan in de issuebeschrijving. Pull requests worden niet als
-tickets opgenomen.
+tickets opgenomen. Alleen issues van de repository-eigenaar, organisatieleden of
+collaborators worden automatisch opgenomen. Geef een extern ingediend issue het
+label `ticket` om het als maintainer expliciet aan de planning toe te voegen.
+Een buitenstaander kan zo geen duplicaatnummer toevoegen dat de synchronisatie
+blokkeert. Dubbele nummers tussen goedgekeurde tickets moeten wel worden opgelost.
 
 Gebruik deze labels voor de planning:
 
@@ -17,9 +21,12 @@ Gebruik deze labels voor de planning:
 | Review/validatie | `status:review` |
 | Geblokkeerd | `status:blocked` |
 | Klaar | Issue sluiten |
+| Vervallen | Issue sluiten als `not planned` of duplicaat |
 | Sprint | Issue aan een GitHub milestone koppelen |
 
-Gebruik één statuslabel tegelijk. Gesloten issues staan altijd bij Klaar;
+Gebruik één statuslabel tegelijk. Voltooide issues staan bij Klaar; gesloten
+issues met reden `not_planned` of `duplicate` staan bij Vervallen en tellen niet
+mee als gepland werk in de sprintvoortgang;
 bij meerdere statuslabels geldt daarna Geblokkeerd, Review, In uitvoering.
 Het sprintoverzicht toont de milestones en telt uitsluitend de TM-tickets.
 Verwijderde issues verdwijnen uit de bestanden; heropende issues keren terug

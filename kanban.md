@@ -12,13 +12,13 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 
 ## Sprints
 
-| Sprint | Status | Gereed / totaal | Deadline |
-| --- | --- | --- | --- |
-| [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | Open | 1 / 5 | Niet gepland |
-| [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | Open | 0 / 4 | Niet gepland |
-| [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | Open | 0 / 3 | Niet gepland |
-| [Sprint 4 - Tests & CI](https://github.com/ju1ced/telenet_telemeter/milestone/4) | Open | 0 / 2 | Niet gepland |
-| [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | Open | 0 / 2 | Niet gepland |
+| Sprint | Status | Gereed / gepland | Vervallen | Deadline |
+| --- | --- | --- | --- | --- |
+| [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | Open | 2 / 5 | 0 | Niet gepland |
+| [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | Open | 0 / 4 | 0 | Niet gepland |
+| [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | Open | 0 / 3 | 0 | Niet gepland |
+| [Sprint 4 - Tests & CI](https://github.com/ju1ced/telenet_telemeter/milestone/4) | Open | 0 / 2 | 0 | Niet gepland |
+| [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | Open | 0 / 2 | 0 | Niet gepland |
 
 ## Backlog
 
@@ -44,7 +44,6 @@ Geen tickets.
 
 | Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
 | --- | --- | --- | --- | --- |
-| [TM-01](https://github.com/ju1ced/telenet_telemeter/issues/2) | Fork-metadata en README bijwerken | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-02](https://github.com/ju1ced/telenet_telemeter/issues/3) | Dependencies in manifest corrigeren | P0 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-04](https://github.com/ju1ced/telenet_telemeter/issues/5) | `check_settings` herschrijven | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-05](https://github.com/ju1ced/telenet_telemeter/issues/6) | Gevoelige data uit logs halen | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
@@ -53,8 +52,13 @@ Geen tickets.
 
 | Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
 | --- | --- | --- | --- | --- |
+| [TM-01](https://github.com/ju1ced/telenet_telemeter/issues/2) | Fork-metadata en README bijwerken | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) | `callTelenet` robuust maken | P0 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 
 ## Geblokkeerd
+
+Geen tickets.
+
+## Vervallen
 
 Geen tickets.

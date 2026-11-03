@@ -19,6 +19,7 @@ MILESTONE = {
 def issue(number=2, ticket="TM-01", state="open", labels=()):
     return {
         "number": number, "title": f"{ticket}: Test | onderwerp",
+        "author_association": "OWNER",
         "html_url": f"https://github.com/o/r/issues/{number}", "state": state,
         "labels": [{"name": label} for label in labels],
         "milestone": deepcopy(MILESTONE),
@@ -60,7 +61,7 @@ class TestTicketSync(unittest.TestCase):
         self.assertIn('<a id="tm-01"></a>', register)
         self.assertLess(register.index("## TM-01"), register.index("## TM-02"))
         self.assertNotIn("TM-50", register + board)
-        self.assertIn("| Open | 1 / 2 | Niet gepland |", board)
+        self.assertIn("| Open | 1 / 2 | 0 | Niet gepland |", board)
         self.assertIn("Test &#124; onderwerp", board)
         self.assertIn("TM-01", board.split("## Review/validatie")[1].split("## Klaar")[0])
         self.assertIn("TM-02", board.split("## Klaar")[1].split("## Geblokkeerd")[0])
@@ -73,7 +74,7 @@ class TestTicketSync(unittest.TestCase):
         docs = sync.render_documents("o/r", [value], [value["milestone"]])
         self.assertIn("**Prioriteit:** P1", docs["tickets.md"])
         self.assertIn("[Sprint 2]", docs["kanban.md"])
-        self.assertIn("| Afgesloten | 0 / 1 | 2026-12-01 |", docs["kanban.md"])
+        self.assertIn("| Afgesloten | 0 / 1 | 0 | 2026-12-01 |", docs["kanban.md"])
         value["milestone"] = None
         self.assertIn("Niet ingepland", sync.render_documents("o/r", [value], [])["tickets.md"])
 
@@ -92,6 +93,35 @@ class TestTicketSync(unittest.TestCase):
         for values in ([], [issue(), issue(3)]):
             with self.subTest(values=values), self.assertRaises(ValueError):
                 sync.render_documents("o/r", values, [])
+
+    def test_external_duplicates_and_unapproved_tickets_are_ignored(self):
+        duplicate = {**issue(90, "TM-01", "closed"),
+                     "author_association": "NONE", "state_reason": "not_planned"}
+        stranger = {**issue(91, "TM-77"), "author_association": "NONE"}
+        docs = sync.render_documents("o/r", [issue(), duplicate, stranger], [MILESTONE])
+        self.assertNotIn("TM-77", docs["tickets.md"])
+        self.assertNotIn("issues/90", docs["tickets.md"])
+        self.assertIn("| Open | 0 / 1 | 0 |", docs["kanban.md"])
+
+    def test_maintainer_label_accepts_an_external_ticket(self):
+        approved = {**issue(91, "TM-77", labels=("ticket",)), "author_association": "NONE"}
+        docs = sync.render_documents("o/r", [issue(), approved], [])
+        self.assertIn("## TM-77", docs["tickets.md"])
+
+    def test_canceled_tickets_are_separate_from_completed_work(self):
+        canceled = {**issue(3, "TM-02", "closed"), "state_reason": "not_planned"}
+        self.assertEqual(sync.status(canceled), "Vervallen")
+        docs = sync.render_documents("o/r", [issue(), canceled], [MILESTONE])
+        self.assertIn("TM-02", docs["kanban.md"].split("## Vervallen")[1])
+        self.assertIn("| Open | 0 / 1 | 1 |", docs["kanban.md"])
+
+    def test_ticket_ids_in_code_are_preserved(self):
+        value = issue()
+        value["body"] = "`TM-02`\n\n```text\nTM-02\n```\n\nSee TM-02."
+        docs = sync.render_documents("o/r", [value, issue(3, "TM-02")], [])
+        self.assertIn("`TM-02`", docs["tickets.md"])
+        self.assertIn("```text\nTM-02\n```", docs["tickets.md"])
+        self.assertIn("See [TM-02](https://github.com/o/r/issues/3).", docs["tickets.md"])
 
     @patch("scripts.sync_tickets.subprocess.run")
     def test_api_fetch_includes_closed_items_and_flattens_pages(self, run):
