@@ -1,13 +1,13 @@
 {
     "domain": "telenet_telemeter",
     "name": "Telenet Telemeter",
-    "codeowners": ["@myTselection"],
+    "codeowners": ["@ju1ced"],
     "config_flow": true,
     "dependencies": [],
-    "documentation": "https://github.com/myTselection/telenet_telemeter",
+    "documentation": "https://github.com/ju1ced/telenet_telemeter",
     "integration_type": "hub",
     "iot_class": "cloud_polling",
-    "issue_tracker": "https://github.com/myTselection/telenet_telemeter/issues",
+    "issue_tracker": "https://github.com/ju1ced/telenet_telemeter/issues",
     "requirements": ["ratelimit==2.2.1"],
     "version": "2.0.5"
 }

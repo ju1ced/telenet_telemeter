@@ -1,10 +1,10 @@
-[![HACS Default](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/default)
-[![GitHub release](https://img.shields.io/github/release/myTselection/telenet_telemeter.svg)](https://github.com/myTselection/telenet_telemeter/releases)
-![GitHub repo size](https://img.shields.io/github/repo-size/myTselection/telenet_telemeter.svg)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/docs/faq/custom_repositories/)
+[![GitHub release](https://img.shields.io/github/release/ju1ced/telenet_telemeter.svg)](https://github.com/ju1ced/telenet_telemeter/releases)
+![GitHub repo size](https://img.shields.io/github/repo-size/ju1ced/telenet_telemeter.svg)
 
-[![GitHub issues](https://img.shields.io/github/issues/myTselection/telenet_telemeter.svg)](https://github.com/myTselection/telenet_telemeter/issues)
-[![GitHub last commit](https://img.shields.io/github/last-commit/myTselection/telenet_telemeter.svg)](https://github.com/myTselection/telenet_telemeter/commits/main)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/myTselection/telenet_telemeter.svg)](https://github.com/myTselection/telenet_telemeter/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/ju1ced/telenet_telemeter.svg)](https://github.com/ju1ced/telenet_telemeter/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ju1ced/telenet_telemeter.svg)](https://github.com/ju1ced/telenet_telemeter/commits/main)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ju1ced/telenet_telemeter.svg)](https://github.com/ju1ced/telenet_telemeter/graphs/commit-activity)
 
 
 # Telenet Telemeter Home Assistant integration
@@ -16,12 +16,15 @@ This integration is in no way affiliated with Telenet Belgium.
 
 Some discussion on this topic can be found within the [Home Assistant Forum](https://community.home-assistant.io/t/telenet-telemeter-isp-monthly-data-usage/444810)
 
-Based on python application of [Killian Meersman](https://github.com/KillianMeersman/telemeter).
+## Credits
+This repository is a maintained fork of the original integration by myTselection, whose upstream repository `myTselection/telenet_telemeter` is no longer available. The original integration is based on the python application of [Killian Meersman](https://github.com/KillianMeersman/telemeter).
 <p align="left"><img src="./logo.png" width="64"/></p>
 
 ## Installation
-- [HACS](https://hacs.xyz/): search for Telenet Telemeter in HACS integrations and install
-  - [![Open your Home Assistant instance and open the repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=myTselection&repository=telenet_telemeter&category=integration)
+- [HACS](https://hacs.xyz/): this fork is not in the HACS default store, so add it as a custom repository:
+  - In HACS, open the menu (⋮) > 'Custom repositories', add `https://github.com/ju1ced/telenet_telemeter` with category 'Integration', then search for Telenet Telemeter and install
+  - Or use the button below:
+  - [![Open your Home Assistant instance and open the repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ju1ced&repository=telenet_telemeter&category=integration)
 - Restart Home Assistant
 - Add 'Telenet Telemeter' integration via HA Settings > 'Devices and Services' > 'Integrations'
 - Provide Telenet username and password
@@ -43,12 +46,12 @@ Based on python application of [Killian Meersman](https://github.com/KillianMeer
   </details>
 
 ## Status
-Still some optimisations are planned, see [Issues](https://github.com/myTselection/telenet_telemeter/issues) section in GitHub.
+Still some optimisations are planned, see [Issues](https://github.com/ju1ced/telenet_telemeter/issues) section in GitHub.
 
 ## Technical pointers
 The main logic and API connection related code can be found within source code telenet_telemeter/custom_components/telenet_telemeter:
-- [sensor.py](https://github.com/myTselection/telenet_telemeter/blob/main/custom_components/telenet_telemeter/sensor.py)
-- [utils.py](https://github.com/myTselection/telenet_telemeter/blob/main/custom_components/telenet_telemeter/utils.py) -> mainly TelenetSession class
+- [sensor.py](https://github.com/ju1ced/telenet_telemeter/blob/main/custom_components/telenet_telemeter/sensor.py)
+- [utils.py](https://github.com/ju1ced/telenet_telemeter/blob/main/custom_components/telenet_telemeter/utils.py) -> mainly TelenetSession class
 
 All other files just contain boilerplat code for the integration to work wtihin HA or to have some constants/strings/translations.
 
@@ -72,7 +75,7 @@ cards:
   - type: markdown
     content: >-
       ## <img
-      src="https://raw.githubusercontent.com/myTselection/telenet_telemeter/main/logo.png"
+      src="https://raw.githubusercontent.com/ju1ced/telenet_telemeter/main/logo.png"
       width="30"/>&nbsp;&nbsp;Telenet Telemeter
 
       ### Total used:
