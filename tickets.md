@@ -78,7 +78,7 @@ Bestandsverwijzingen zijn relatief aan `custom_components/telenet_telemeter/`, t
 ## TM-04 `check_settings` herschrijven
 
 - **GitHub:** [#5](https://github.com/ju1ced/telenet_telemeter/issues/5)
-- **Status:** Review/validatie
+- **Status:** Klaar
 - **Prioriteit:** P1
 - **Fase:** 1
 - **Sprint:** [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1)
