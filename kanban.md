@@ -24,7 +24,6 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 
 | Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
 | --- | --- | --- | --- | --- |
-| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
 | [TM-07](https://github.com/ju1ced/telenet_telemeter/issues/8) | Options flow repareren | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) |
 | [TM-08](https://github.com/ju1ced/telenet_telemeter/issues/9) | Reauth-flow en setup-foutafhandeling | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4), [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) |
 | [TM-09](https://github.com/ju1ced/telenet_telemeter/issues/10) | `__init__.py` lifecycle opschonen | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) |
@@ -38,7 +37,9 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 
 ## In uitvoering
 
-Geen tickets.
+| Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
+| --- | --- | --- | --- | --- |
+| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
 
 ## Review/validatie
 
