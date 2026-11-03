@@ -4,7 +4,6 @@ from collections import OrderedDict
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.const import (
     CONF_NAME,
     CONF_PASSWORD,
@@ -60,34 +59,13 @@ def create_schema(entry, option=False):
 
 class Mixin:
     async def test_setup(self, user_input):
-        client = async_get_clientsession(self.hass)
-
+        self._errors = {}
         try:
             check_settings(user_input, self.hass)
-        except ValueError:
+        except (ValueError, vol.Invalid):
             self._errors["base"] = "no_valid_settings"
             return False
-
-        if user_input.get("username"):
-            username = user_input.get(CONF_USERNAME)
-        else:
-            self._errors["base"] = "missing username"
-
-        if user_input.get("password"):
-            password = user_input.get(CONF_PASSWORD)
-        else:
-            self._errors["base"] = "missing password"
-
-        # Use explicit None check so False (unchecked) is valid
-        internet = user_input.get("internet")
-        if internet is None:
-            self._errors["base"] = "missing internet"
-
-        mobile = user_input.get("mobile")
-        if mobile is None:
-            self._errors["base"] = "missing mobile"
-
-        return len(self._errors) == 0
+        return True
 
 
 class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
@@ -148,7 +126,6 @@ class ComponentOptionsHandler(config_entries.OptionsFlow, Mixin):
                 )
                 return self.async_create_entry(title="", data={})
             else:
-                self._errors["base"] = "missing data options handler"
                 return self.async_show_form(
                     step_id="edit",
                     data_schema=vol.Schema(

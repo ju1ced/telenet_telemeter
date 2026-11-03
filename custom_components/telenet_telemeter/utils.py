@@ -15,29 +15,14 @@ _LOGGER = logging.getLogger(__name__)
 TELENET_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.0%z"
 
 def check_settings(config, hass):
-    if not any(config.get(i) for i in ["username"]):
-        _LOGGER.error("username was not set")
-    else:
-        return True
+    """Require credentials and at least one enabled usage type."""
+    if not config.get("username"):
+        raise vol.Invalid("Username is required")
     if not config.get("password"):
-        _LOGGER.error("password was not set")
-    else:
-        return True
-    if not config.get("internet"):
-        _LOGGER.error("internet bool was not set")
-    else:
-        return True
-    if not config.get("mobile"):
-        _LOGGER.error("mobile bool was not set")
-    else:
-        return True
-        
-    if config.get("internet") and config.get("mobile"):
-        return True
-    else:
-        _LOGGER.error("At least one of internet or mobile is to be set")
-
-    raise vol.Invalid("Missing settings to setup the sensor.")
+        raise vol.Invalid("Password is required")
+    if not (config.get("internet") or config.get("mobile")):
+        raise vol.Invalid("At least one of internet or mobile must be enabled")
+    return True
 
 class HttpMethod(Enum):
     GET = 'GET'

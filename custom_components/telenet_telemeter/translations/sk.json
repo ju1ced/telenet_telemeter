@@ -29,7 +29,7 @@
             "missing internet": "Uveďte, či sa má sledovať používanie internetu",
             "missing mobile": "Uveďte, či sa má sledovať používanie mobilných zariadení",
             "missing data options handler": "Obslužný program možností zlyhal",
-            "no_valid_settings": "Žiadne platné nastavenia, zadajte používateľské meno, heslo, internet a mobil v konfigurácii ha."
+            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich)."
         }
     },
     "options": {
@@ -51,7 +51,7 @@
             "missing internet": "Uveďte, či sa má sledovať používanie internetu",
             "missing mobile": "Uveďte, či sa má sledovať používanie mobilných zariadení",
             "missing data options handler": "Obslužný program možností zlyhal",
-            "no_valid_settings": "Žiadne platné nastavenia, zadajte používateľské meno, heslo, internet a mobil v konfigurácii ha."
+            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich)."
         }
     },
     "services": {
