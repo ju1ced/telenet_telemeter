@@ -29,7 +29,7 @@
             "missing internet": "Veuillez indiquer si l'utilisation d'internet doit être suivie",
             "missing mobile": "Veuillez indiquer si l'utilisation mobile doit être suivie",
             "missing data options handler": "Le gestionnaire d'options a échoué",
-            "no_valid_settings": "Aucun paramètre valide, fournissez le nom d'utilisateur, le mot de passe, internet & mobile dans la configuration ha."
+            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux)."
         }
     },
     "options": {
@@ -51,7 +51,7 @@
             "missing internet": "Veuillez indiquer si l'utilisation d'internet doit être suivie",
             "missing mobile": "Veuillez indiquer si l'utilisation mobile doit être suivie",
             "missing data options handler": "Le gestionnaire d'options a échoué",
-            "no_valid_settings": "Aucun paramètre valide, fournissez le nom d'utilisateur, le mot de passe, internet & mobile dans la configuration ha."
+            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux)."
         }
     },
     "services": {

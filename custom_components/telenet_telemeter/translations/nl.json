@@ -29,7 +29,7 @@
             "missing internet": "Geef aan of internetgebruik gevolgd moet worden",
             "missing mobile": "Geef aan of mobiel gebruik gevolgd moet worden",
             "missing data options handler": "Optie-handler is mislukt",
-            "no_valid_settings": "Geen geldige instellingen, geef gebruikersnaam, wachtwoord, internet & mobiel op in ha-configuratie."
+            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in."
         }
     },
     "options": {
@@ -51,7 +51,7 @@
             "missing internet": "Geef aan of internetgebruik gevolgd moet worden",
             "missing mobile": "Geef aan of mobiel gebruik gevolgd moet worden",
             "missing data options handler": "Optie-handler is mislukt",
-            "no_valid_settings": "Geen geldige instellingen, geef gebruikersnaam, wachtwoord, internet & mobiel op in ha-configuratie."
+            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in."
         }
     },
     "services": {
