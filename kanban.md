@@ -16,7 +16,7 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 | --- | --- | --- | --- | --- |
 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | Afgesloten | 5 / 5 | 0 | Niet gepland |
 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | Open | 1 / 4 | 0 | Niet gepland |
-| [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | Open | 0 / 3 | 0 | Niet gepland |
+| [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | Open | 0 / 4 | 0 | Niet gepland |
 | [Sprint 4 - Tests & CI](https://github.com/ju1ced/telenet_telemeter/milestone/4) | Open | 0 / 2 | 0 | Niet gepland |
 | [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | Open | 0 / 2 | 0 | Niet gepland |
 
@@ -33,6 +33,7 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 | [TM-14](https://github.com/ju1ced/telenet_telemeter/issues/15) | CI en tooling moderniseren | P2 | [Sprint 4 - Tests & CI](https://github.com/ju1ced/telenet_telemeter/milestone/4) | [TM-13](https://github.com/ju1ced/telenet_telemeter/issues/14) |
 | [TM-15](https://github.com/ju1ced/telenet_telemeter/issues/16) | Release en versiebeheer van de fork | P1 | [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | [TM-01](https://github.com/ju1ced/telenet_telemeter/issues/2), [TM-02](https://github.com/ju1ced/telenet_telemeter/issues/3), [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
 | [TM-16](https://github.com/ju1ced/telenet_telemeter/issues/17) | Portaal-wijzigingen opvolgen | P2 | [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | [TM-08](https://github.com/ju1ced/telenet_telemeter/issues/9) |
+| [TM-17](https://github.com/ju1ced/telenet_telemeter/issues/26) | Verbruiksberekening piek-sensor en squeezed-status repareren | P1 | [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | [TM-13](https://github.com/ju1ced/telenet_telemeter/issues/14), [TM-10](https://github.com/ju1ced/telenet_telemeter/issues/11), [TM-11](https://github.com/ju1ced/telenet_telemeter/issues/12) |
 
 ## In uitvoering
 

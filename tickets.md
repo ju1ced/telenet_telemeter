@@ -329,3 +329,26 @@ Bestandsverwijzingen zijn relatief aan `custom_components/telenet_telemeter/`, t
 - **Acceptatiecriteria:**
   - Bij mislukte parse van de loginpagina toont HA een duidelijke melding (geen `AttributeError` op `None`).
   - README-sectie "Troubleshooting".
+
+
+<a id="tm-17"></a>
+
+## TM-17 Verbruiksberekening piek-sensor en squeezed-status repareren
+
+- **GitHub:** [#26](https://github.com/ju1ced/telenet_telemeter/issues/26)
+- **Status:** Backlog
+- **Prioriteit:** P1
+- **Fase:** 3
+- **Sprint:** [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3)
+
+- **Scope:** vier fouten in `sensor.py`, gevonden met de karakterisatietests van [TM-13](https://github.com/ju1ced/telenet_telemeter/issues/14) (PR #25). Ze staan daar als strikte `xfail` in `tests/test_sensor_calculations.py`:
+  1. **`SensorPeak.used_percentage` is ~0 bij API v2.** `SensorPeak` deelt het v2-verbruik (GB) door `included_volume + extended_volume`, terwijl `included_volume` in MB·1024-eenheden staat; `SensorInternet` deelt wel eerst door `1024*1024`. Fixture 300 van 750 GB: internet-sensor 40.0, piek-sensor 0.0. Geldt voor zowel FUP als CAP, dus voor alle huidige (v2) Telenet/BASE-accounts.
+  2. **Daardoor krijgt een v2 CAP-account boven de limiet op de piek-sensor nooit de afgeknepen snelheden** (`1 Mbps` / `256 Kbps`) en `squeezed` blijft `False`.
+  3. **v1 FUP: de `squeezed`-vlag uit de API wordt altijd overschreven met `False`**: na het inlezen volgt `if not self._data._telemeter and self._used_percentage >= 100`, wat met data altijd onwaar is. Zelfde patroon in `SensorPeak`.
+  4. **`ComponentData.clear_session` doet niets**: `self._session : None` is een type-annotatie, geen toewijzing.
+- **Afhankelijkheden:** [TM-13](https://github.com/ju1ced/telenet_telemeter/issues/14) (tests). Afstemmen met [TM-10](https://github.com/ju1ced/telenet_telemeter/issues/11)/[TM-11](https://github.com/ju1ced/telenet_telemeter/issues/12) als die de berekening verplaatsen.
+- **Acceptatiecriteria:**
+  - De vier `xfail`-markeringen in `tests/test_sensor_calculations.py` zijn verwijderd en de tests slagen.
+  - Piek-sensor en internet-sensor tonen hetzelfde verbruikspercentage voor dezelfde data (v1 en v2).
+  - Overige attributen blijven ongewijzigd (bestaande karakterisatietests blijven groen).
+  - CHANGELOG vermeldt de fix onder *Fixed*.
