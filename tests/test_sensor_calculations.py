@@ -5,7 +5,7 @@ The fixtures in tests/fixtures/ mimic the API data that ComponentData stores
 pin today's state and attributes so TM-10/TM-11 can refactor safely.
 Expected values are worked out by hand from the fixtures.
 
-Known defects are recorded as strict xfails: fixing one makes its test pass,
+Known defects (TM-17, #26) are recorded as strict xfails: fixing one makes its test pass,
 which fails the run until the xfail marker is removed on purpose.
 """
 
@@ -134,7 +134,7 @@ async def test_v1_peak_sensor_matches_internet_sensor():
 # --- Known defects (strict xfail) ------------------------------------------
 
 @pytest.mark.xfail(strict=True, reason=(
-    "SensorPeak divides v2 usage (GB) by included_volume in MB*1024 units "
+    "TM-17 (#26): SensorPeak divides v2 usage (GB) by included_volume in MB*1024 units "
     "without converting, unlike SensorInternet; its used_percentage is ~0"))
 @pytest.mark.parametrize("fixture", ["internet_v2_fup.json", "internet_v2_cap.json"])
 async def test_v2_peak_sensor_used_percentage_matches_internet_sensor(fixture):
@@ -144,7 +144,7 @@ async def test_v2_peak_sensor_used_percentage_matches_internet_sensor(fixture):
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "Same unit mismatch: an over-limit v2 CAP account never gets the "
+    "TM-17 (#26): Same unit mismatch: an over-limit v2 CAP account never gets the "
     "squeezed 1 Mbps / 256 Kbps speeds on the peak sensor"))
 async def test_v2_cap_over_limit_peak_sensor_shows_squeezed_speeds():
     attrs = (await updated(sensor.SensorPeak, "internet_v2_cap_over_limit.json")).extra_state_attributes
@@ -153,7 +153,7 @@ async def test_v2_cap_over_limit_peak_sensor_shows_squeezed_speeds():
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "FUP branch reads 'squeezed' from the v1 API and then overwrites it with "
+    "TM-17 (#26): FUP branch reads 'squeezed' from the v1 API and then overwrites it with "
     "`not self._data._telemeter and ...`, which is always False"))
 async def test_v1_fup_squeezed_flag_from_api_is_kept():
     entity = await updated(sensor.SensorInternet, "internet_v1_fup.json")
@@ -161,7 +161,7 @@ async def test_v1_fup_squeezed_flag_from_api_is_kept():
 
 
 @pytest.mark.xfail(strict=True, reason=(
-    "ComponentData.clear_session uses `self._session : None`, an annotation, "
+    "TM-17 (#26): ComponentData.clear_session uses `self._session : None`, an annotation, "
     "so the session is never cleared"))
 def test_clear_session_drops_session():
     data = sensor.ComponentData("u", "p", True, False, None, None)
