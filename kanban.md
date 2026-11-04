@@ -15,7 +15,7 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 | Sprint | Status | Gereed / gepland | Vervallen | Deadline |
 | --- | --- | --- | --- | --- |
 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | Afgesloten | 5 / 5 | 0 | Niet gepland |
-| [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | Open | 1 / 4 | 0 | Niet gepland |
+| [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | Open | 2 / 4 | 0 | Niet gepland |
 | [Sprint 3 - Entities & data](https://github.com/ju1ced/telenet_telemeter/milestone/3) | Open | 0 / 4 | 0 | Niet gepland |
 | [Sprint 4 - Tests & CI](https://github.com/ju1ced/telenet_telemeter/milestone/4) | Open | 0 / 2 | 0 | Niet gepland |
 | [Sprint 5 - Release & portaalbewaking](https://github.com/ju1ced/telenet_telemeter/milestone/5) | Open | 0 / 2 | 0 | Niet gepland |
@@ -41,9 +41,7 @@ Geen tickets.
 
 ## Review/validatie
 
-| Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
-| --- | --- | --- | --- | --- |
-| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
+Geen tickets.
 
 ## Klaar
 
@@ -54,6 +52,7 @@ Geen tickets.
 | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) | `callTelenet` robuust maken | P0 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-04](https://github.com/ju1ced/telenet_telemeter/issues/5) | `check_settings` herschrijven | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
 | [TM-05](https://github.com/ju1ced/telenet_telemeter/issues/6) | Gevoelige data uit logs halen | P1 | [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1) | — |
+| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
 | [TM-09](https://github.com/ju1ced/telenet_telemeter/issues/10) | `__init__.py` lifecycle opschonen | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) |
 
 ## Geblokkeerd

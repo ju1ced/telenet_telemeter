@@ -112,7 +112,7 @@ Bestandsverwijzingen zijn relatief aan `custom_components/telenet_telemeter/`, t
 ## TM-06 Config flow herschrijven
 
 - **GitHub:** [#7](https://github.com/ju1ced/telenet_telemeter/issues/7)
-- **Status:** Review/validatie
+- **Status:** Klaar
 - **Prioriteit:** P1
 - **Fase:** 2
 - **Sprint:** [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2)
