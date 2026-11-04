@@ -37,7 +37,7 @@ Bestandsverwijzingen zijn relatief aan `custom_components/telenet_telemeter/`, t
 ## TM-02 Dependencies in manifest corrigeren
 
 - **GitHub:** [#3](https://github.com/ju1ced/telenet_telemeter/issues/3)
-- **Status:** Review/validatie
+- **Status:** Klaar
 - **Prioriteit:** P0
 - **Fase:** 1
 - **Sprint:** [Sprint 1 - Metadata & snelle fixes](https://github.com/ju1ced/telenet_telemeter/milestone/1)
