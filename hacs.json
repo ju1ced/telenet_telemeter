@@ -1,5 +1,6 @@
 {
   "name": "Telenet Telemeter",
   "render_readme": true,
-  "country": ["BE"]
+  "country": ["BE"],
+  "homeassistant": "2024.1.0"
 }
