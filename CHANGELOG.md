@@ -46,10 +46,13 @@ fork. Requires Home Assistant 2024.1 or newer.
 ### Upgrade notes
 - Earlier versions created an empty "configuration.yaml" entry on start when a
   `telenet_telemeter:` YAML section was present. Such an entry has no
-  credentials and now fails to set up: delete it under Settings > Devices &
-  services > Telenet Telemeter and remove the YAML section.
-- An entry with both internet and mobile switched off now fails to set up.
-  Delete it and add the integration again with at least one of them enabled.
+  credentials: it shows as loaded but has no entities, and the log contains
+  "Error while setting up telenet_telemeter platform for sensor" (and
+  "for switch"). Delete it under Settings > Devices & services > Telenet
+  Telemeter and remove the YAML section.
+- An entry with both internet and mobile switched off behaves the same way
+  (no entities, the same errors in the log). Delete it and add the
+  integration again with at least one of them enabled.
 
 ### Known issues
 - The integration has no working options ("Configure") dialog yet; to change
