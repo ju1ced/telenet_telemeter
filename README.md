@@ -28,6 +28,12 @@ This repository is a maintained fork of the original integration by myTselection
 - Restart Home Assistant
 - Add 'Telenet Telemeter' integration via HA Settings > 'Devices and Services' > 'Integrations'
 - Provide Telenet username and password
+
+Accounts are configured through the Home Assistant UI; YAML account configuration
+is not supported. If an older version created an empty entry named
+`configuration.yaml`, remove that empty entry under Settings > Devices & services
+and add your account through the UI. Existing entries with valid account settings
+can stay in place.
 - A sensor `sensor.telenet_telemeter_internet_[w123456]` should become available with the percentage of data left and extra attributes on usage and period start/end etc.
   - For users having a FUP 'unlimited' data, your actual 'peak' data usage versus the [service limit](https://www2.telenet.be/content/www-telenet-be/nl/klantenservice/wat-is-telenet-netwerkbeheer.html) (eg 750GB/3TB) will be used in order to calculate your overal 'usage' status, so you can denote if you are close to be switched into a limited/smallband mode.
   - Unlimited (FUP) users should use `peak_usage` and `offpeak_usage` attributes, limited (CAP) users should use `includedvolume_usage` attribute.

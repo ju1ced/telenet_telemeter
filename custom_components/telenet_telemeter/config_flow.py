@@ -1,12 +1,14 @@
 """Adds config flow for component."""
+
 import logging
+
 import requests
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 
-from .utils import TelenetSession, check_settings
 from .const import DOMAIN, NAME, PROVIDERS, PROVIDER_TELENET
+from .utils import TelenetSession, check_settings
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -15,7 +17,9 @@ def create_schema(entry=None, option=False):
     """Keep submitted choices when displaying the form again."""
     data = entry.data if option else (entry or {})
     return {
-        vol.Required("provider", default=data.get("provider", PROVIDER_TELENET)): vol.In(PROVIDERS),
+        vol.Required(
+            "provider", default=data.get("provider", PROVIDER_TELENET)
+        ): vol.In(PROVIDERS),
         vol.Required(CONF_USERNAME, default=data.get(CONF_USERNAME, "")): str,
         vol.Required(CONF_PASSWORD): str,
         vol.Optional("internet", default=data.get("internet", True)): bool,
@@ -25,7 +29,9 @@ def create_schema(entry=None, option=False):
 
 def account_id(data):
     """Use provider and normalized username to identify an account."""
-    return f"{data.get('provider', PROVIDER_TELENET).casefold()}:{data.get(CONF_USERNAME, '').strip().casefold()}"
+    provider = data.get("provider", PROVIDER_TELENET).casefold()
+    username = data.get(CONF_USERNAME, "").strip().casefold()
+    return f"{provider}:{username}"
 
 
 def validate_login(data):
@@ -61,7 +67,10 @@ class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
         """Handle a flow initialized by the user."""
 
         if user_input is not None:
-            data = {**user_input, "provider": user_input.get("provider", PROVIDER_TELENET)}
+            data = {
+                **user_input,
+                "provider": user_input.get("provider", PROVIDER_TELENET),
+            }
             data[CONF_USERNAME] = data.get(CONF_USERNAME, "").strip()
             await self.test_setup(data)
             if self._errors:
@@ -70,21 +79,30 @@ class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
             # Entries created before unique IDs were introduced must also match.
-            if any(account_id(entry.data) == unique_id for entry in self._async_current_entries()):
+            if any(
+                account_id(entry.data) == unique_id
+                for entry in self._async_current_entries()
+            ):
                 return self.async_abort(reason="already_configured")
             try:
                 await self.hass.async_add_executor_job(validate_login, data)
             except requests.HTTPError as error:
                 response = error.response
                 self._errors["base"] = (
-                    "invalid_auth" if response is not None and response.status_code in (401, 403)
+                    "invalid_auth"
+                    if response is not None and response.status_code in (401, 403)
                     else "cannot_connect"
                 )
-            except (requests.RequestException, AssertionError, KeyError, ValueError, AttributeError):
+            except (
+                requests.RequestException, AssertionError, KeyError, ValueError,
+                AttributeError,
+            ):
                 self._errors["base"] = "cannot_connect"
             except Exception as error:
                 # Exception text and tracebacks may contain login responses/tokens.
-                _LOGGER.error("Unexpected login validation failure (%s)", type(error).__name__)
+                _LOGGER.error(
+                    "Unexpected login validation failure (%s)", type(error).__name__
+                )
                 self._errors["base"] = "unknown"
             else:
                 return self.async_create_entry(
