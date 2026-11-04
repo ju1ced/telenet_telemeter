@@ -36,13 +36,13 @@ P0 = blokkerende bug · P1 = belangrijk · P2 = nice to have.
 
 ## In uitvoering
 
-| Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
-| --- | --- | --- | --- | --- |
-| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
+Geen tickets.
 
 ## Review/validatie
 
-Geen tickets.
+| Ticket | Onderwerp | Prioriteit | Sprint | Afhankelijkheid |
+| --- | --- | --- | --- | --- |
+| [TM-06](https://github.com/ju1ced/telenet_telemeter/issues/7) | Config flow herschrijven | P1 | [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2) | [TM-03](https://github.com/ju1ced/telenet_telemeter/issues/4) |
 
 ## Klaar
 
