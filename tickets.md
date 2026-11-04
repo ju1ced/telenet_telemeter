@@ -173,7 +173,7 @@ Bestandsverwijzingen zijn relatief aan `custom_components/telenet_telemeter/`, t
 ## TM-09 `__init__.py` lifecycle opschonen
 
 - **GitHub:** [#10](https://github.com/ju1ced/telenet_telemeter/issues/10)
-- **Status:** Backlog
+- **Status:** Klaar
 - **Prioriteit:** P1
 - **Fase:** 2
 - **Sprint:** [Sprint 2 - Config flow & lifecycle](https://github.com/ju1ced/telenet_telemeter/milestone/2)
