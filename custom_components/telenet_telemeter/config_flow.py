@@ -1,60 +1,40 @@
 """Adds config flow for component."""
 import logging
-from collections import OrderedDict
-
+import requests
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import (
-    CONF_NAME,
-    CONF_PASSWORD,
-    CONF_RESOURCES,
-    CONF_SCAN_INTERVAL,
-    CONF_USERNAME
-)
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 
-from . import DOMAIN, NAME
-from .utils import (check_settings)
-from .const import PROVIDERS, PROVIDER_TELENET
+from .utils import TelenetSession, check_settings
+from .const import DOMAIN, NAME, PROVIDERS, PROVIDER_TELENET
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def create_schema(entry, option=False):
-    """Create a default schema based on if a option or if settings
-    is already filled out.
-    """
+def create_schema(entry=None, option=False):
+    """Keep submitted choices when displaying the form again."""
+    data = entry.data if option else (entry or {})
+    return {
+        vol.Required("provider", default=data.get("provider", PROVIDER_TELENET)): vol.In(PROVIDERS),
+        vol.Required(CONF_USERNAME, default=data.get(CONF_USERNAME, "")): str,
+        vol.Required(CONF_PASSWORD): str,
+        vol.Optional("internet", default=data.get("internet", True)): bool,
+        vol.Optional("mobile", default=data.get("mobile", True)): bool,
+    }
 
-    if option:
-        default_username = entry.data.get(CONF_USERNAME, "")
-        default_password = entry.data.get(CONF_PASSWORD, "")
-        default_internet = entry.data.get("internet", True)
-        default_mobile = entry.data.get("mobile", True)
-        default_provider = entry.data.get("provider", PROVIDER_TELENET)
-    else:
-        default_username = ""
-        default_password = ""
-        default_internet = True
-        default_mobile = True
-        default_provider = PROVIDER_TELENET
 
-    data_schema = OrderedDict()
-    data_schema[
-        vol.Required("provider", default=default_provider, description="Provider")
-    ] = vol.In(PROVIDERS)
-    data_schema[
-        vol.Required(CONF_USERNAME, description="Email")
-    ] = str
-    data_schema[
-        vol.Required(CONF_PASSWORD, description="Password")
-    ] = str
-    data_schema[
-        vol.Optional("internet", default=default_internet, description="Track internet usage?")
-    ] = bool
-    data_schema[
-        vol.Optional("mobile", default=default_mobile, description="Track mobile usage?")
-    ] = bool
+def account_id(data):
+    """Use provider and normalized username to identify an account."""
+    return f"{data.get('provider', PROVIDER_TELENET).casefold()}:{data.get(CONF_USERNAME, '').strip().casefold()}"
 
-    return data_schema
+
+def validate_login(data):
+    """Run blocking authentication entirely inside the executor."""
+    session = TelenetSession(provider=data.get("provider", PROVIDER_TELENET))
+    try:
+        session.login(data[CONF_USERNAME], data[CONF_PASSWORD])
+    finally:
+        session.s.close()
 
 
 class Mixin:
@@ -72,7 +52,6 @@ class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for component."""
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
     def __init__(self):
         """Initialize."""
@@ -82,11 +61,36 @@ class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
         """Handle a flow initialized by the user."""
 
         if user_input is not None:
-            await self.test_setup(user_input)
+            data = {**user_input, "provider": user_input.get("provider", PROVIDER_TELENET)}
+            data[CONF_USERNAME] = data.get(CONF_USERNAME, "").strip()
+            await self.test_setup(data)
             if self._errors:
-                return await self._show_config_form(user_input)
-            provider = user_input.get("provider", PROVIDER_TELENET)
-            return self.async_create_entry(title=f'{NAME} {provider} {user_input.get("username","")}', data=user_input)
+                return await self._show_config_form(data)
+            unique_id = account_id(data)
+            await self.async_set_unique_id(unique_id)
+            self._abort_if_unique_id_configured()
+            # Entries created before unique IDs were introduced must also match.
+            if any(account_id(entry.data) == unique_id for entry in self._async_current_entries()):
+                return self.async_abort(reason="already_configured")
+            try:
+                await self.hass.async_add_executor_job(validate_login, data)
+            except requests.HTTPError as error:
+                response = error.response
+                self._errors["base"] = (
+                    "invalid_auth" if response is not None and response.status_code in (401, 403)
+                    else "cannot_connect"
+                )
+            except (requests.RequestException, AssertionError, KeyError, ValueError, AttributeError):
+                self._errors["base"] = "cannot_connect"
+            except Exception as error:
+                # Exception text and tracebacks may contain login responses/tokens.
+                _LOGGER.error("Unexpected login validation failure (%s)", type(error).__name__)
+                self._errors["base"] = "unknown"
+            else:
+                return self.async_create_entry(
+                    title=f"{NAME} {data['provider']} {data[CONF_USERNAME]}", data=data
+                )
+            return await self._show_config_form(data)
 
         return await self._show_config_form(user_input)
 
@@ -98,8 +102,8 @@ class ComponentFlowHandler(Mixin, config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_import(self, user_input):
-        """Import a config entry."""
-        return self.async_create_entry(title="configuration.yaml", data={})
+        """Reject legacy YAML instead of creating an unusable empty entry."""
+        return self.async_abort(reason="yaml_not_supported")
 
 
 class ComponentOptionsHandler(config_entries.OptionsFlow, Mixin):

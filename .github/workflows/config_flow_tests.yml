@@ -1,0 +1,30 @@
+name: Config flow tests
+
+on:
+  pull_request:
+    paths:
+      - custom_components/telenet_telemeter/**
+      - tests/test_config_flow.py
+      - .github/workflows/config_flow_tests.yml
+  push:
+    branches: [main]
+    paths:
+      - custom_components/telenet_telemeter/**
+      - tests/test_config_flow.py
+      - .github/workflows/config_flow_tests.yml
+
+permissions:
+  contents: read
+
+jobs:
+  config-flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Home Assistant test environment
+        run: python -m pip install pytest-homeassistant-custom-component==0.13.316 ratelimit==2.2.1
+      - name: Run config flow tests
+        run: python -m pytest -o addopts= --asyncio-mode=auto tests/test_config_flow.py -q --timeout=30

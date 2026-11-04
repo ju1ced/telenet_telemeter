@@ -1,0 +1,64 @@
+{
+    "config": {
+        "title": "Telenet / BASE Telemeter",
+        "step": {
+            "user": {
+                "description": "Setup a Telenet or BASE Telemeter sensor. Select your provider, enter your username and password, and indicate if internet and/or mobile usage is to be tracked.",
+                "data": {
+                    "provider": "Provider",
+                    "username": "Email",
+                    "password": "Password",
+                    "internet": "Internet",
+                    "mobile": "Mobile"
+                }
+            },
+            "edit": {
+                "description": "Edit Telenet or BASE Telemeter sensor setup.",
+                "data": {
+                    "provider": "Provider",
+                    "username": "Email",
+                    "password": "Password",
+                    "internet": "Internet",
+                    "mobile": "Mobile"
+                }
+            }
+        },
+        "error": {
+            "no_valid_settings": "Provide a username and password, and enable at least one of internet or mobile usage.",
+            "invalid_auth": "Invalid username or password.",
+            "cannot_connect": "Cannot connect to the provider. Please try again later.",
+            "unknown": "An unexpected error occurred. Please try again."
+        },
+        "abort": {
+            "already_configured": "This provider account is already configured.",
+            "already_in_progress": "This provider account is already being configured.",
+            "yaml_not_supported": "YAML import is not supported. Add this integration through Settings > Devices & services."
+        }
+    },
+    "options": {
+        "step": {
+            "edit": {
+                "description": "Edit Telenet or BASE Telemeter sensor setup.",
+                "data": {
+                    "provider": "Provider",
+                    "username": "Email",
+                    "password": "Password",
+                    "internet": "Internet",
+                    "mobile": "Mobile"
+                }
+            }
+        },
+        "error": {
+            "no_valid_settings": "Provide a username and password, and enable at least one of internet or mobile usage.",
+            "invalid_auth": "Invalid username or password.",
+            "cannot_connect": "Cannot connect to the provider. Please try again later.",
+            "unknown": "An unexpected error occurred. Please try again."
+        }
+    },
+    "services": {
+        "reboot_internet": {
+            "name": "reboot_internet",
+            "description": "Reboot the internet modem"
+        }
+    }
+}

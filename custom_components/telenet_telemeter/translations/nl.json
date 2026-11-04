@@ -24,12 +24,15 @@
             }
         },
         "error": {
-            "missing username": "Geef een geldige gebruikersnaam (e-mail) op",
-            "missing password": "Geef een geldig wachtwoord op",
-            "missing internet": "Geef aan of internetgebruik gevolgd moet worden",
-            "missing mobile": "Geef aan of mobiel gebruik gevolgd moet worden",
-            "missing data options handler": "Optie-handler is mislukt",
-            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in."
+            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in.",
+            "invalid_auth": "Ongeldige gebruikersnaam of ongeldig wachtwoord.",
+            "cannot_connect": "Kan geen verbinding maken met de provider. Probeer het later opnieuw.",
+            "unknown": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+        },
+        "abort": {
+            "already_configured": "Dit provideraccount is al geconfigureerd.",
+            "already_in_progress": "Dit provideraccount wordt al geconfigureerd.",
+            "yaml_not_supported": "YAML-import wordt niet ondersteund. Voeg de integratie toe via Instellingen > Apparaten en diensten."
         }
     },
     "options": {
@@ -46,12 +49,10 @@
             }
         },
         "error": {
-            "missing username": "Geef een geldige gebruikersnaam (e-mail) op",
-            "missing password": "Geef een geldig wachtwoord op",
-            "missing internet": "Geef aan of internetgebruik gevolgd moet worden",
-            "missing mobile": "Geef aan of mobiel gebruik gevolgd moet worden",
-            "missing data options handler": "Optie-handler is mislukt",
-            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in."
+            "no_valid_settings": "Vul een gebruikersnaam en wachtwoord in en schakel minstens één van internet- of mobiel verbruik in.",
+            "invalid_auth": "Ongeldige gebruikersnaam of ongeldig wachtwoord.",
+            "cannot_connect": "Kan geen verbinding maken met de provider. Probeer het later opnieuw.",
+            "unknown": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
         }
     },
     "services": {
