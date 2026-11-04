@@ -1,0 +1,65 @@
+{
+  "description": "API v1: telemeter() internetusage as stored by ComponentData._forced_update",
+  "v2": false,
+  "telemeter": {
+    "productIdentifier": "W123456",
+    "internetusage": [
+      {
+        "businessidentifier": "W123456",
+        "lastupdated": "2026-11-04T08:00:00.0+0100",
+        "availableperiods": [
+          {
+            "usages": [
+              {
+                "producttype": "FIBER_1000",
+                "specurl": "https://api.example.invalid/spec",
+                "periodstart": "2026-10-15T00:00:00.0+0100",
+                "periodend": "2026-11-14T00:00:00.0+0100",
+                "includedvolume": 786432000,
+                "extendedvolume": {
+                  "volume": 0
+                },
+                "squeezed": true,
+                "totalusage": {
+                  "peak": 393216000,
+                  "offpeak": 104857600,
+                  "includedvolume": null,
+                  "extendedvolume": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "product_details": {
+    "product": {
+      "labelkey": "FIBER_1000",
+      "services": [
+        {
+          "servicetype": "FIXED_INTERNET",
+          "specifications": [
+            {
+              "labelkey": "spec.fixedinternet.speed.download",
+              "value": "1000",
+              "unit": "Mbps"
+            },
+            {
+              "labelkey": "spec.fixedinternet.speed.upload",
+              "value": "100",
+              "unit": "Mbps"
+            }
+          ]
+        }
+      ],
+      "characteristics": {
+        "service_category": "FUP",
+        "service_category_limit": {
+          "value": "750",
+          "unit": "GB"
+        }
+      }
+    }
+  }
+}

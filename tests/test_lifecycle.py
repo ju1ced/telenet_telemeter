@@ -1,7 +1,6 @@
 """Config entry lifecycle and reboot service tests (TM-09).
 
-Needs pytest-homeassistant-custom-component (requirements.test.txt). Run with:
-    python -m pytest tests/test_lifecycle.py -o addopts="" -o asyncio_mode=auto
+Needs requirements.test.txt. Run with: python -m pytest tests/test_lifecycle.py
 """
 
 from unittest.mock import MagicMock, patch
@@ -17,11 +16,6 @@ from custom_components import telenet_telemeter as integration
 from custom_components.telenet_telemeter.const import DOMAIN
 
 SERVICE = "reboot_internet"
-
-
-@pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):
-    yield
 
 
 @pytest.fixture(autouse=True)

@@ -1,0 +1,73 @@
+{
+  "description": "API v2 (CAP): productUsage + productDailyUsage + billCycles as stored by ComponentData._forced_update",
+  "v2": true,
+  "telemeter": {
+    "startDate": "2026-10-15",
+    "endDate": "2026-11-14",
+    "productIdentifier": "INT-0001",
+    "internet": {
+      "category": "CAP",
+      "specurl": "https://api.example.invalid/spec",
+      "totalUsage": {
+        "lastUsageDate": "2026-11-04",
+        "units": 75
+      },
+      "allocatedUsage": {
+        "units": 150
+      },
+      "extendedUsage": {
+        "volume": 0
+      },
+      "usedPercentage": null
+    },
+    "internetUsage": [
+      {
+        "totalUsage": {
+          "peak": null,
+          "offPeak": null
+        }
+      }
+    ],
+    "wifidetails": {
+      "internetProductIdentifier": "INT-0001",
+      "modemMac": "00:11:22:33:44:55",
+      "wifiEnabled": true,
+      "wifreeEnabled": false
+    }
+  },
+  "product_details": {
+    "product": {
+      "labelkey": "Basic Internet",
+      "services": [
+        {
+          "servicetype": "FIXED_INTERNET",
+          "specifications": [
+            {
+              "labelkey": "spec.fixedinternet.speed.download",
+              "value": "1000",
+              "unit": "Mbps"
+            },
+            {
+              "labelkey": "spec.fixedinternet.speed.upload",
+              "value": "100",
+              "unit": "Mbps"
+            }
+          ]
+        }
+      ],
+      "characteristics": {
+        "service_category": "CAP",
+        "elementarycharacteristics": [
+          {
+            "key": "other",
+            "value": "1"
+          },
+          {
+            "key": "internet_usage_limit",
+            "value": "150"
+          }
+        ]
+      }
+    }
+  }
+}
