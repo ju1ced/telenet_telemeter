@@ -21,13 +21,15 @@ This repository is a maintained fork of the original integration by myTselection
 <p align="left"><img src="./logo.png" width="64"/></p>
 
 ## Installation
+Requires Home Assistant 2024.1 or newer. See the [changelog](CHANGELOG.md) for what changed in each release.
+
 - [HACS](https://hacs.xyz/): this fork is not in the HACS default store, so add it as a custom repository:
   - In HACS, open the menu (⋮) > 'Custom repositories', add `https://github.com/ju1ced/telenet_telemeter` with category 'Integration', then search for Telenet Telemeter and install
   - Or use the button below:
   - [![Open your Home Assistant instance and open the repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ju1ced&repository=telenet_telemeter&category=integration)
 - Restart Home Assistant
 - Add 'Telenet Telemeter' integration via HA Settings > 'Devices and Services' > 'Integrations'
-- Provide Telenet username and password
+- Choose the provider (Telenet or BASE) and provide your username and password
 - A sensor `sensor.telenet_telemeter_internet_[w123456]` should become available with the percentage of data left and extra attributes on usage and period start/end etc.
   - For users having a FUP 'unlimited' data, your actual 'peak' data usage versus the [service limit](https://www2.telenet.be/content/www-telenet-be/nl/klantenservice/wat-is-telenet-netwerkbeheer.html) (eg 750GB/3TB) will be used in order to calculate your overal 'usage' status, so you can denote if you are close to be switched into a limited/smallband mode.
   - Unlimited (FUP) users should use `peak_usage` and `offpeak_usage` attributes, limited (CAP) users should use `includedvolume_usage` attribute.
@@ -35,12 +37,20 @@ This repository is a maintained fork of the original integration by myTselection
   - A `sensor.telenet_telemeter_peak_[w123456]` sensor is available indicating if peak time is currently active or not and if all allowed peaktime data has been used, the calculated spead limits will be shown as an attribute
 - Switch `switch.telenet_telemeter_wifi` will be added to show the status of the Telenet router wifi. The wifi can be enabled/disabled with this switch.
 - If 'Mobile' has been selected during setup of the integration, a Telenet telemeter mobile sensor will be created for each mobile subscription. For now, the sensor state will show the usage (%) state of the data part of each subscription. But details of data/text/voice volume and usage are added as attributes on the sensor, so this information is available too. 
-- Service `telenet_telemeter.reboot_internet` will become availabe if internet is enabled. When calling this service, the internet modem will be rebooted.
+- Service `telenet_telemeter.reboot_internet` will become available if internet is enabled. When calling this service, the internet modem will be rebooted. If more than one account (e.g. Telenet and BASE) tracks internet, choose the account with `config_entry_id`.
   <details><summary>Example:</summary>
 
     ```
     service: telenet_telemeter.reboot_internet
     data: {}
+    ```
+
+    With several accounts:
+
+    ```
+    service: telenet_telemeter.reboot_internet
+    data:
+      config_entry_id: 01JABCDEF0123456789ABCDEFG
     ```
 
   </details>
