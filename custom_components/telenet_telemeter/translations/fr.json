@@ -56,8 +56,34 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "redémarrer_internet",
-            "description": "Redémarrer le modem internet"
+            "name": "Redémarrer le modem internet",
+            "description": "Redémarre le modem internet d'un compte Telenet ou BASE.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Compte",
+                    "description": "Entrée d'intégration dont le modem doit être redémarré. Facultatif si une seule entrée suit internet."
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "Aucune entrée chargée avec suivi internet n'a l'id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "{count} entrées avec suivi internet sont chargées ; choisissez-en une avec le champ Compte."
+        },
+        "no_internet_product": {
+            "message": "Aucun produit internet à redémarrer n'a été trouvé."
+        },
+        "no_modem": {
+            "message": "Aucun modem à redémarrer n'a été trouvé."
+        },
+        "reboot_failed": {
+            "message": "Le redémarrage du modem {provider} a échoué ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} ne permet pas de redémarrer ce modem."
         }
     }
 }

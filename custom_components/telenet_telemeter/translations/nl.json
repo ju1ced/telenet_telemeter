@@ -56,8 +56,34 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "herstart_internet",
-            "description": "Herstart het internetmodem"
+            "name": "Internetmodem herstarten",
+            "description": "Herstart het internetmodem van een Telenet- of BASE-account.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Account",
+                    "description": "Integratie-item waarvan het modem herstart wordt. Optioneel als maar één item internet volgt."
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "Er is geen geladen item met internetopvolging met id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "Er zijn {count} items met internetopvolging geladen; kies er een met het veld Account."
+        },
+        "no_internet_product": {
+            "message": "Er is geen internetproduct gevonden om te herstarten."
+        },
+        "no_modem": {
+            "message": "Er is geen modem gevonden om te herstarten."
+        },
+        "reboot_failed": {
+            "message": "Het {provider}-modem herstarten is mislukt ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} ondersteunt het herstarten van dit modem niet."
         }
     }
 }

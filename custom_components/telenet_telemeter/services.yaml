@@ -1,6 +1,7 @@
-# Describes the format for available services for telenet_telemeter
-
 reboot_internet:
-  description: >
-    Reboot the internet modem
-      
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: telenet_telemeter

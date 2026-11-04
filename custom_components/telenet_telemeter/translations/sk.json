@@ -56,8 +56,34 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "reštartovať_internet",
-            "description": "Reštartujte internetový modem"
+            "name": "Reštartovať internetový modem",
+            "description": "Reštartuje internetový modem účtu Telenet alebo BASE.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Účet",
+                    "description": "Položka integrácie, ktorej modem sa má reštartovať. Nepovinné, ak internet sleduje iba jedna položka."
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "Žiadna načítaná položka so sledovaním internetu nemá id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "Načítaných je {count} položiek so sledovaním internetu; vyberte jednu v poli Účet."
+        },
+        "no_internet_product": {
+            "message": "Nenašiel sa žiadny internetový produkt na reštart."
+        },
+        "no_modem": {
+            "message": "Nenašiel sa žiadny modem na reštart."
+        },
+        "reboot_failed": {
+            "message": "Reštart modemu {provider} zlyhal ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} nepodporuje reštart tohto modemu."
         }
     }
 }

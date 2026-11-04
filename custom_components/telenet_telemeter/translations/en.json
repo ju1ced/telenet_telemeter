@@ -56,8 +56,34 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "reboot_internet",
-            "description": "Reboot the internet modem"
+            "name": "Reboot internet modem",
+            "description": "Reboots the internet modem of a Telenet or BASE account.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Account",
+                    "description": "Integration entry whose modem to reboot. Optional when only one entry tracks internet."
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "No loaded entry with internet tracking has id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "{count} entries with internet tracking are loaded; choose one with the Account field."
+        },
+        "no_internet_product": {
+            "message": "No internet product was found to reboot."
+        },
+        "no_modem": {
+            "message": "No modem was found to reboot."
+        },
+        "reboot_failed": {
+            "message": "Rebooting the {provider} modem failed ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} does not support rebooting this modem."
         }
     }
 }
