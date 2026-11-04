@@ -120,8 +120,6 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
     return True
 
 
-
-
 def get_desired_internet_product(products, desired_product_type):
     _LOGGER.debug(f'products: {products}, {desired_product_type}')
     bundle_product = next((product for product in products if product.get('productType','').lower() == desired_product_type), None)

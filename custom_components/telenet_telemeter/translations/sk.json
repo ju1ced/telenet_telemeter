@@ -65,5 +65,25 @@
                 }
             }
         }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "Žiadna načítaná položka so sledovaním internetu nemá id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "Načítaných je {count} položiek so sledovaním internetu; vyberte jednu v poli Účet."
+        },
+        "no_internet_product": {
+            "message": "Nenašiel sa žiadny internetový produkt na reštart."
+        },
+        "no_modem": {
+            "message": "Nenašiel sa žiadny modem na reštart."
+        },
+        "reboot_failed": {
+            "message": "Reštart modemu {provider} zlyhal ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} nepodporuje reštart tohto modemu."
+        }
     }
 }

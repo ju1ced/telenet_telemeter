@@ -5,7 +5,6 @@ from pathlib import Path
 import requests
 import voluptuous as vol
 
-from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
@@ -49,13 +48,15 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType):
-    """Set up this component; YAML configuration is handed to the import flow."""
+    """Set up this component. YAML configuration is not supported."""
     _LOGGER.info(STARTUP)
-    if config.get(DOMAIN) is not None:
-        hass.async_create_task(
-            hass.config_entries.flow.async_init(
-                DOMAIN, context={"source": config_entries.SOURCE_IMPORT}, data={}
-            )
+    if DOMAIN in config:
+        # The old import step created an empty, credential-less entry on every
+        # start; accounts are configured through the UI instead.
+        _LOGGER.warning(
+            "Configuring %s in configuration.yaml is not supported; remove the "
+            "'%s:' section and add the integration via Settings > Devices & services",
+            NAME, DOMAIN,
         )
     return True
 
@@ -105,13 +106,14 @@ def _select_reboot_entry(hass: HomeAssistant, entry_id: str | None) -> ConfigEnt
             if entry.entry_id == entry_id:
                 return entry
         raise ServiceValidationError(
-            f"No loaded {NAME} entry with internet tracking has id {entry_id}"
+            translation_domain=DOMAIN, translation_key="entry_not_found",
+            translation_placeholders={"entry_id": entry_id},
         )
     if len(entries) == 1:
         return entries[0]
     raise ServiceValidationError(
-        f"{len(entries)} {NAME} entries with internet tracking are loaded; "
-        f"set {ATTR_CONFIG_ENTRY_ID} to choose one"
+        translation_domain=DOMAIN, translation_key="entry_ambiguous",
+        translation_placeholders={"count": str(len(entries))},
     )
 
 
@@ -125,10 +127,10 @@ def _reboot_modem(config) -> bool:
         products = session.productSubscriptions("INTERNET")
         identifier = products[0].get("identifier") if products else None
         if not identifier:
-            raise HomeAssistantError("No internet product found to reboot")
+            raise HomeAssistantError(translation_domain=DOMAIN, translation_key="no_internet_product")
         modem_mac = (session.modemdetails(identifier) or {}).get("mac")
         if not modem_mac:
-            raise HomeAssistantError("No modem found to reboot")
+            raise HomeAssistantError(translation_domain=DOMAIN, translation_key="no_modem")
         session.reboot(modem_mac)
         return True
     finally:
@@ -142,10 +144,21 @@ def _make_reboot_handler(hass: HomeAssistant):
         provider_name = PROVIDER_NAMES.get(entry.data.get("provider", PROVIDER_TELENET), NAME)
         try:
             rebooted = await hass.async_add_executor_job(_reboot_modem, entry.data)
-        except requests.RequestException as err:
-            raise HomeAssistantError(f"{provider_name} modem reboot failed: {type(err).__name__}") from err
+        except HomeAssistantError:
+            raise
+        except (requests.RequestException, AssertionError, KeyError, IndexError, TypeError, ValueError) as err:
+            # The login flow signals unexpected responses with asserts and
+            # lookups; report only the error type so no response data leaks.
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="reboot_failed",
+                translation_placeholders={"provider": provider_name, "error": type(err).__name__},
+            ) from None
         if not rebooted:
-            raise HomeAssistantError(f"{provider_name} does not support rebooting this modem")
-        _LOGGER.info("%s modem reboot requested for entry %s", provider_name, entry.title)
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="reboot_unsupported",
+                translation_placeholders={"provider": provider_name},
+            )
+        # entry_id only: the entry title contains the account username.
+        _LOGGER.info("%s modem reboot requested for entry %s", provider_name, entry.entry_id)
 
     return handle_reboot_internet

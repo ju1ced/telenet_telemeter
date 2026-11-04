@@ -91,11 +91,13 @@ async def test_service_targets_selected_entry(hass):
     await setup(hass, base)
 
     with patch.object(integration, "_reboot_modem", return_value=True) as reboot:
-        with pytest.raises(ServiceValidationError):
+        with pytest.raises(ServiceValidationError) as err:
             await hass.services.async_call(DOMAIN, SERVICE, {}, blocking=True)
-        with pytest.raises(ServiceValidationError):
+        assert err.value.translation_key == "entry_ambiguous"
+        with pytest.raises(ServiceValidationError) as err:
             await hass.services.async_call(
                 DOMAIN, SERVICE, {"config_entry_id": "unknown"}, blocking=True)
+        assert err.value.translation_key == "entry_not_found"
         reboot.assert_not_called()
 
         await hass.services.async_call(
@@ -113,11 +115,32 @@ async def test_service_targets_selected_entry(hass):
 async def test_service_reports_failures(hass):
     entry = make_entry(hass)
     await setup(hass, entry)
-    for outcome, message in ((False, "does not support"),
-                             (requests.ConnectionError("offline"), "ConnectionError")):
+    cases = [
+        (False, "reboot_unsupported", None),
+        (requests.ConnectionError("offline"), "reboot_failed", "ConnectionError"),
+        # The login flow asserts on status codes and indexes JSON responses.
+        (AssertionError("status 500 body=secret"), "reboot_failed", "AssertionError"),
+        (KeyError("stateHandle"), "reboot_failed", "KeyError"),
+        (HomeAssistantError(translation_domain=DOMAIN, translation_key="no_modem"), "no_modem", None),
+    ]
+    for outcome, key, error in cases:
         with patch.object(integration, "_reboot_modem", side_effect=[outcome]), \
-             pytest.raises(HomeAssistantError, match=message):
+             pytest.raises(HomeAssistantError) as err:
             await hass.services.async_call(DOMAIN, SERVICE, {}, blocking=True)
+        assert err.value.translation_key == key
+        if error:
+            assert err.value.translation_placeholders["error"] == error
+            assert err.value.__cause__ is None  # no response details chained
+
+
+async def test_reboot_does_not_log_username(hass, caplog):
+    entry = make_entry(hass, username="secret-user@example.invalid")
+    await setup(hass, entry)
+    caplog.clear()
+    with patch.object(integration, "_reboot_modem", return_value=True):
+        await hass.services.async_call(DOMAIN, SERVICE, {}, blocking=True)
+    assert entry.entry_id in caplog.text
+    assert "secret-user" not in caplog.text
 
 
 async def test_update_reloads_and_unload_removes_listener(hass):
@@ -144,12 +167,16 @@ async def test_reload_keeps_single_service_and_listener(hass):
     assert len(entry.update_listeners) == 1
 
 
-async def test_yaml_setup_only_starts_import_flow(hass):
+async def test_yaml_config_creates_no_entries(hass, caplog):
     with patch.object(hass.config_entries.flow, "async_init") as init:
         assert await async_setup_component(hass, DOMAIN, {DOMAIN: {}})
         await hass.async_block_till_done()
-    init.assert_called_once()
-    assert init.call_args.kwargs["context"] == {"source": "import"}
+        # A restart runs async_setup again; it must not accumulate entries.
+        assert await integration.async_setup(hass, {DOMAIN: {}})
+        await hass.async_block_till_done()
+    init.assert_not_called()
+    assert hass.config_entries.async_entries(DOMAIN) == []
+    assert "configuration.yaml is not supported" in caplog.text
 
 
 def test_reboot_modem_closes_session_on_error():

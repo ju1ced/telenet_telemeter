@@ -65,5 +65,25 @@
                 }
             }
         }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "No loaded entry with internet tracking has id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "{count} entries with internet tracking are loaded; choose one with the Account field."
+        },
+        "no_internet_product": {
+            "message": "No internet product was found to reboot."
+        },
+        "no_modem": {
+            "message": "No modem was found to reboot."
+        },
+        "reboot_failed": {
+            "message": "Rebooting the {provider} modem failed ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} does not support rebooting this modem."
+        }
     }
 }

@@ -65,5 +65,25 @@
                 }
             }
         }
+    },
+    "exceptions": {
+        "entry_not_found": {
+            "message": "Er is geen geladen item met internetopvolging met id {entry_id}."
+        },
+        "entry_ambiguous": {
+            "message": "Er zijn {count} items met internetopvolging geladen; kies er een met het veld Account."
+        },
+        "no_internet_product": {
+            "message": "Er is geen internetproduct gevonden om te herstarten."
+        },
+        "no_modem": {
+            "message": "Er is geen modem gevonden om te herstarten."
+        },
+        "reboot_failed": {
+            "message": "Het {provider}-modem herstarten is mislukt ({error})."
+        },
+        "reboot_unsupported": {
+            "message": "{provider} ondersteunt het herstarten van dit modem niet."
+        }
     }
 }

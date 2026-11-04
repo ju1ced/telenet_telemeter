@@ -34,7 +34,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     async_add_entities(switches)
 
 
-
 def get_desired_internet_product(products, desired_product_type):
     bundle_product = next((product for product in products if product.get('productType').lower() == desired_product_type), None)
     _LOGGER.debug(f'desired_product: {bundle_product}, {desired_product_type}')
