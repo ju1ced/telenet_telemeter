@@ -56,8 +56,14 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "reboot_internet",
-            "description": "Reboot the internet modem"
+            "name": "Reboot internet modem",
+            "description": "Reboots the internet modem of a Telenet or BASE account.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Account",
+                    "description": "Integration entry whose modem to reboot. Optional when only one entry tracks internet."
+                }
+            }
         }
     }
 }

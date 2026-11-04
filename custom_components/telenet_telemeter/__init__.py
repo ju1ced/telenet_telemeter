@@ -2,11 +2,16 @@ import logging
 import json
 from pathlib import Path
 
+import requests
+import voluptuous as vol
+
 from homeassistant import config_entries
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.const import Platform
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from .utils import TelenetSession
 from .const import PROVIDER_TELENET, PROVIDER_NAMES
 from homeassistant.const import (
@@ -44,81 +49,103 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType):
-    """Set up this component using YAML."""
+    """Set up this component; YAML configuration is handed to the import flow."""
     _LOGGER.info(STARTUP)
-    if config.get(DOMAIN) is None:
-        return True
-
-    try:
-        await hass.config_entries.async_forward_entry(config, Platform.SENSOR)
-        _LOGGER.info("Successfully added sensor from the integration")
-    except ValueError:
-        pass
-
-    hass.async_create_task(
-        await hass.config_entries.flow.async_init(
-            DOMAIN, context={"source": config_entries.SOURCE_IMPORT}, data={}
+    if config.get(DOMAIN) is not None:
+        hass.async_create_task(
+            hass.config_entries.flow.async_init(
+                DOMAIN, context={"source": config_entries.SOURCE_IMPORT}, data={}
+            )
         )
-    )
     return True
-
-async def async_update_options(hass: HomeAssistant, config_entry: ConfigEntry):
-    await hass.config_entries.async_reload(config_entry.entry_id)
-
-async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry):
-    """Reload integration when options changed"""
-    await hass.config_entries.async_reload(config_entry.entry_id)
-
-async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
-    unload_ok = await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
-    return unload_ok
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up component as config entry."""
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
-    _LOGGER.info(f"{DOMAIN} register_services")
-    internet = config_entry.data.get("internet")
-    if internet: 
-        register_services(hass, config_entry)
+    config_entry.async_on_unload(config_entry.add_update_listener(async_reload_entry))
+    if config_entry.data.get("internet") and not hass.services.has_service(DOMAIN, SERVICE_REBOOT_INTERNET):
+        hass.services.async_register(
+            DOMAIN, SERVICE_REBOOT_INTERNET, _make_reboot_handler(hass), schema=REBOOT_SCHEMA
+        )
     return True
 
 
-async def async_remove_entry(hass, config_entry):
+async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
+    """Reload the entry when its data or options change."""
+    await hass.config_entries.async_reload(config_entry.entry_id)
+
+
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
+    unload_ok = await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
+    if unload_ok and not _reboot_entries(hass, exclude=config_entry.entry_id):
+        hass.services.async_remove(DOMAIN, SERVICE_REBOOT_INTERNET)
+    return unload_ok
+
+
+SERVICE_REBOOT_INTERNET = "reboot_internet"
+ATTR_CONFIG_ENTRY_ID = "config_entry_id"
+REBOOT_SCHEMA = vol.Schema({vol.Optional(ATTR_CONFIG_ENTRY_ID): cv.string})
+
+
+def _reboot_entries(hass: HomeAssistant, exclude: str | None = None) -> list[ConfigEntry]:
+    """Loaded entries that track internet and can therefore reboot a modem."""
+    return [
+        entry for entry in hass.config_entries.async_entries(DOMAIN)
+        if entry.entry_id != exclude
+        and entry.state is ConfigEntryState.LOADED
+        and entry.data.get("internet")
+    ]
+
+
+def _select_reboot_entry(hass: HomeAssistant, entry_id: str | None) -> ConfigEntry:
+    entries = _reboot_entries(hass)
+    if entry_id is not None:
+        for entry in entries:
+            if entry.entry_id == entry_id:
+                return entry
+        raise ServiceValidationError(
+            f"No loaded {NAME} entry with internet tracking has id {entry_id}"
+        )
+    if len(entries) == 1:
+        return entries[0]
+    raise ServiceValidationError(
+        f"{len(entries)} {NAME} entries with internet tracking are loaded; "
+        f"set {ATTR_CONFIG_ENTRY_ID} to choose one"
+    )
+
+
+def _reboot_modem(config) -> bool:
+    """Blocking: log in and reboot the modem. Returns False when unsupported."""
+    session = TelenetSession(provider=config.get("provider", PROVIDER_TELENET))
     try:
-        for platform in PLATFORMS:
-            await hass.config_entries.async_forward_entry_unload(config_entry, platform)
-            _LOGGER.info("Successfully removed sensor from the integration")
-    except ValueError:
-        pass
+        session.login(config.get(CONF_USERNAME), config.get(CONF_PASSWORD))
+        if not session.apiVersion2():
+            return False
+        products = session.productSubscriptions("INTERNET")
+        identifier = products[0].get("identifier") if products else None
+        if not identifier:
+            raise HomeAssistantError("No internet product found to reboot")
+        modem_mac = (session.modemdetails(identifier) or {}).get("mac")
+        if not modem_mac:
+            raise HomeAssistantError("No modem found to reboot")
+        session.reboot(modem_mac)
+        return True
+    finally:
+        session.s.close()
 
 
-def register_services(hass, config_entry):
-        
-    async def handle_reboot_internet(call):
-        """Handle the service call."""
-        config = config_entry.data
-        username = config.get("username")
-        password = config.get("password")
-        provider = config.get("provider", PROVIDER_TELENET)
-        session = TelenetSession(provider=provider)
+def _make_reboot_handler(hass: HomeAssistant):
+    async def handle_reboot_internet(call: ServiceCall) -> None:
+        """Reboot the modem of the selected (or only) entry."""
+        entry = _select_reboot_entry(hass, call.data.get(ATTR_CONFIG_ENTRY_ID))
+        provider_name = PROVIDER_NAMES.get(entry.data.get("provider", PROVIDER_TELENET), NAME)
+        try:
+            rebooted = await hass.async_add_executor_job(_reboot_modem, entry.data)
+        except requests.RequestException as err:
+            raise HomeAssistantError(f"{provider_name} modem reboot failed: {type(err).__name__}") from err
+        if not rebooted:
+            raise HomeAssistantError(f"{provider_name} does not support rebooting this modem")
+        _LOGGER.info("%s modem reboot requested for entry %s", provider_name, entry.title)
 
-        await hass.async_add_executor_job(lambda: session.login(username, password))
-        provider_name = PROVIDER_NAMES.get(provider, NAME)
-        _LOGGER.debug(f"{provider_name} reboot_internet login completed")
-        v2 = await hass.async_add_executor_job(lambda: session.apiVersion2())
-        if not v2:
-            return
-        internetProductDetails = await hass.async_add_executor_job(lambda: session.productSubscriptions("INTERNET"))
-        assert internetProductDetails is not None
-        internetProductIdentifier = internetProductDetails[0].get('identifier')
-        assert internetProductIdentifier is not None
-
-        modemDetails = await hass.async_add_executor_job(lambda: session.modemdetails(internetProductIdentifier))
-        modemMac = modemDetails.get('mac')
-        assert modemMac is not None
-        assert len(modemMac) > 0
-        await hass.async_add_executor_job(lambda: session.reboot(modemMac))
-
-    hass.services.async_register(DOMAIN, 'reboot_internet', handle_reboot_internet)
-    _LOGGER.info(f"async_register done")
+    return handle_reboot_internet

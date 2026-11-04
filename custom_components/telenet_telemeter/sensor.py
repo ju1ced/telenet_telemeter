@@ -120,13 +120,6 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
     return True
 
 
-async def async_remove_entry(hass, config_entry):
-    _LOGGER.info("async_remove_entry " + NAME)
-    try:
-        await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
-        _LOGGER.info("Successfully removed sensor from the integration")
-    except ValueError:
-        pass
 
 
 def get_desired_internet_product(products, desired_product_type):

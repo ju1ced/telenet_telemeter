@@ -33,13 +33,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     async_add_entities(switches)
 
-async def async_remove_entry(hass, config_entry):
-    _LOGGER.info("async_remove_entry " + NAME)
-    try:
-        await hass.config_entries.async_forward_entry_unload(config_entry, "switch")
-        _LOGGER.info("Successfully removed switch from the integration")
-    except ValueError:
-        pass
 
 
 def get_desired_internet_product(products, desired_product_type):

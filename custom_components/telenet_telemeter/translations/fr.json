@@ -56,8 +56,14 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "redémarrer_internet",
-            "description": "Redémarrer le modem internet"
+            "name": "Redémarrer le modem internet",
+            "description": "Redémarre le modem internet d'un compte Telenet ou BASE.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Compte",
+                    "description": "Entrée d'intégration dont le modem doit être redémarré. Facultatif si une seule entrée suit internet."
+                }
+            }
         }
     }
 }

@@ -56,8 +56,14 @@
     },
     "services": {
         "reboot_internet": {
-            "name": "herstart_internet",
-            "description": "Herstart het internetmodem"
+            "name": "Internetmodem herstarten",
+            "description": "Herstart het internetmodem van een Telenet- of BASE-account.",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Account",
+                    "description": "Integratie-item waarvan het modem herstart wordt. Optioneel als maar één item internet volgt."
+                }
+            }
         }
     }
 }
