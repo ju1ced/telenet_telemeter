@@ -24,12 +24,15 @@
             }
         },
         "error": {
-            "missing username": "Zadajte platné používateľské meno",
-            "missing password": "Zadajte platné heslo",
-            "missing internet": "Uveďte, či sa má sledovať používanie internetu",
-            "missing mobile": "Uveďte, či sa má sledovať používanie mobilných zariadení",
-            "missing data options handler": "Obslužný program možností zlyhal",
-            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich)."
+            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich).",
+            "invalid_auth": "Nesprávne používateľské meno alebo heslo.",
+            "cannot_connect": "Nie je možné pripojiť sa k poskytovateľovi. Skúste to neskôr.",
+            "unknown": "Vyskytla sa neočakávaná chyba. Skúste to znova."
+        },
+        "abort": {
+            "already_configured": "Tento účet poskytovateľa je už nakonfigurovaný.",
+            "already_in_progress": "Tento účet poskytovateľa sa už konfiguruje.",
+            "yaml_not_supported": "Import YAML nie je podporovaný. Pridajte integráciu cez Nastavenia > Zariadenia a služby."
         }
     },
     "options": {
@@ -46,12 +49,10 @@
             }
         },
         "error": {
-            "missing username": "Zadajte platné používateľské meno",
-            "missing password": "Zadajte platné heslo",
-            "missing internet": "Uveďte, či sa má sledovať používanie internetu",
-            "missing mobile": "Uveďte, či sa má sledovať používanie mobilných zariadení",
-            "missing data options handler": "Obslužný program možností zlyhal",
-            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich)."
+            "no_valid_settings": "Zadajte používateľské meno a heslo a zapnite sledovanie spotreby internetu alebo mobilných služieb (aspoň jedno z nich).",
+            "invalid_auth": "Nesprávne používateľské meno alebo heslo.",
+            "cannot_connect": "Nie je možné pripojiť sa k poskytovateľovi. Skúste to neskôr.",
+            "unknown": "Vyskytla sa neočakávaná chyba. Skúste to znova."
         }
     },
     "services": {

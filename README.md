@@ -55,6 +55,12 @@ Requires Home Assistant 2024.1 or newer. See the [changelog](CHANGELOG.md) for w
 
   </details>
 
+Accounts are configured through the Home Assistant UI; YAML account configuration
+is not supported. If an older version created an empty entry named
+`configuration.yaml`, remove that empty entry under Settings > Devices & services
+and add your account through the UI. Existing entries with valid account settings
+can stay in place.
+
 ## Status
 Still some optimisations are planned, see [Issues](https://github.com/ju1ced/telenet_telemeter/issues) section in GitHub.
 

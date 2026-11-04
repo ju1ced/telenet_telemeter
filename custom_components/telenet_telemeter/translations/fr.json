@@ -24,12 +24,15 @@
             }
         },
         "error": {
-            "missing username": "Veuillez fournir un nom d'utilisateur valide (e-mail)",
-            "missing password": "Veuillez fournir un mot de passe valide",
-            "missing internet": "Veuillez indiquer si l'utilisation d'internet doit être suivie",
-            "missing mobile": "Veuillez indiquer si l'utilisation mobile doit être suivie",
-            "missing data options handler": "Le gestionnaire d'options a échoué",
-            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux)."
+            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux).",
+            "invalid_auth": "Nom d’utilisateur ou mot de passe incorrect.",
+            "cannot_connect": "Impossible de se connecter au fournisseur. Réessayez plus tard.",
+            "unknown": "Une erreur inattendue est survenue. Réessayez."
+        },
+        "abort": {
+            "already_configured": "Ce compte fournisseur est déjà configuré.",
+            "already_in_progress": "Ce compte fournisseur est en cours de configuration.",
+            "yaml_not_supported": "L’import YAML n’est pas pris en charge. Ajoutez cette intégration via Paramètres > Appareils et services."
         }
     },
     "options": {
@@ -46,12 +49,10 @@
             }
         },
         "error": {
-            "missing username": "Veuillez fournir un nom d'utilisateur valide (e-mail)",
-            "missing password": "Veuillez fournir un mot de passe valide",
-            "missing internet": "Veuillez indiquer si l'utilisation d'internet doit être suivie",
-            "missing mobile": "Veuillez indiquer si l'utilisation mobile doit être suivie",
-            "missing data options handler": "Le gestionnaire d'options a échoué",
-            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux)."
+            "no_valid_settings": "Saisissez un nom d’utilisateur et un mot de passe, et activez le suivi de la consommation internet ou mobile (au moins un des deux).",
+            "invalid_auth": "Nom d’utilisateur ou mot de passe incorrect.",
+            "cannot_connect": "Impossible de se connecter au fournisseur. Réessayez plus tard.",
+            "unknown": "Une erreur inattendue est survenue. Réessayez."
         }
     },
     "services": {
